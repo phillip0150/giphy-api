@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <title>Giphy api</title>
   <link rel="stylesheet" type="text/css" href="reset.css">
-  <link rel="stylesheet" type="text/css" href="style.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
@@ -14,7 +14,7 @@
   <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h1>Gif Search</h1>
+                <h1 class="animated bounce infinite">Gif Search</h1>
             </div>
         </div>
         <div class="row">
@@ -39,15 +39,28 @@
                 <input id="add-gif" type="submit" value="Add a Gif button">
             </div>
         </div>
-        <div class="row" id='clickOnImage'>
+
+        <div class="row" id='favoriteImages'>
             <div class="col-md-12">
-                    <h1>Click on the image to play the gif!</h1>
-                    <button id="-10">-10</button>
-                    <button id="10">+10</button>
+                    <h1>Your favorites</h1>
                     
             </div>
         </div>
+        <hr>
+
+        <div class="row" id='clickOnImage'>
+            <div class="col-md-12">
+                    <h1>Click on the image to play the gif!</h1>
+                    <button type="button" class="btn btn-outline-secondary waves-effect" id="-10">-10</button>
+                    <button type="button" class="btn btn-outline-secondary waves-effect" id="10">+10</button>
+                    
+            </div>
+        </div>
+
+        
+
     </form>
+
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
