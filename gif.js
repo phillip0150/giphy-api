@@ -3,6 +3,7 @@ var gifs = ["Wow", "Okay", "Whatever", "Meme"];
 // Setting a var to see what the Response is, calling for future functions
 var theResponse;
 var theText;
+var theCount = 11;
 //Hiding an Id
 $("#clickOnImage").hide();
 
@@ -73,10 +74,8 @@ $("#add-gif").on("click", function(event) {
 $("#newDiv").on("click", function(event) {
     event.preventDefault();
     var theGif = event.target.id;
-    console.log(theGif);
-    console.log(theResponse.data[0]);
+ 
     var theSrc = event.target.src;
-    console.log(theResponse.data[theGif].images.fixed_width.url);
     var moving = theResponse.data[theGif].images.fixed_width.url;
     var notMoving = theResponse.data[theGif].images.fixed_width_still.url;
     if(theSrc === notMoving){
@@ -89,13 +88,14 @@ $("#newDiv").on("click", function(event) {
     
   });
 
-// Generic function for displaying the gif
-$(document).on("click", ".gif", displayGifInfo);
-$(document).on("click", "#20", function(event){
+  function displayGifInfoAdd10 (event){
     //URL query
     event.preventDefault();
-    
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit=21&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
+    theCount += 11;
+    if (theCount > 0) {
+        $("#newDiv.row").show();
+    }
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit="+theCount+"&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
     console.log(theResponse);
     //ajax call to get info
     $.ajax({
@@ -112,12 +112,19 @@ $(document).on("click", "#20", function(event){
             $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+response.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+response.data[i].rating+"</p></div>");
         }
     });
-});
-$(document).on("click", "#10", function(event){
+  }
+
+  function displayGifInfoRemove10 (event){
     //URL query
     event.preventDefault();
-    
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit=11&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
+    theCount += -11;
+    if (theCount <=0) {
+        $("#newDiv.row").hide();
+        
+    }
+
+    console.log(theCount);
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit="+theCount+"&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
     console.log(theResponse);
     //ajax call to get info
     $.ajax({
@@ -125,16 +132,23 @@ $(document).on("click", "#10", function(event){
     method: "GET"
     }).then(function(response) {
         $("#newDiv").empty();
-        theResponse = response;
         //setting theResponse to current response
         //showing Id
+        theResponse = response;
         $("#clickOnImage").show();
         //for each item found, print it;
-        for(var i =0; i < theResponse.data.length-1; i++){
-            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+theResponse.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+theResponse.data[i].rating+"</p></div>");
+        for(var i =0; i < response.data.length-1; i++){
+            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+response.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+response.data[i].rating+"</p></div>");
         }
     });
-});
+  }
+
+
+// Generic function for displaying the gif
+$(document).on("click", ".gif", displayGifInfo);
+$(document).on("click", "#10", displayGifInfoAdd10);
+$(document).on("click", "#-10", displayGifInfoRemove10);
+
 
 
 // Calling the renderButtons function to display the intial buttons
