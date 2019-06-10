@@ -14,13 +14,18 @@ $("#gif-form").append("<div id=newDiv class=row></div>");
 
 // Function for dumping the JSON content for each button into the div
 function displayGifInfo() {  
-    //URL query
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + $(this).text() + "&limit=11&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
+    //setting the button text to theText
+    //creating a query with the search of what was in the text box
     theText = $(this).text();
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit=11&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
+    
     //ajax call to get info
     $.ajax({
+    //url is quryURL
+    //using method GET
     url: queryURL,
     method: "GET"
+    //when we get a response, do function
     }).then(function(response) {
         $("#newDiv").empty();
         //setting theResponse to current response
@@ -29,7 +34,7 @@ function displayGifInfo() {
         $("#clickOnImage").show();
         //for each item found, print it;
         for(var i =0; i < theResponse.data.length-1; i++){
-            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+response.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+response.data[i].rating+"</p><div class=form-check form-check-inline><input class=form-check-input type=checkbox id="+i+" data-response="+theText+" value="+response.data[i].images.fixed_width_still.url+"><label class=form-check-label for=inlineCheckbox"+i+">Add to favorites</label></div></div>");
+            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+theResponse.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+theResponse.data[i].rating+"</p><div class=form-check form-check-inline><input class=form-check-input type=checkbox id="+i+" data-response="+theText+" value="+theResponse.data[i].images.fixed_width_still.url+"><label class=form-check-label for=inlineCheckbox"+i+">Add to favorites</label></div></div>");
         }
     });
 }
