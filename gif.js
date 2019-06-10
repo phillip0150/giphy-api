@@ -179,6 +179,10 @@ $(document).on("click", ".form-check-input", function() {
 
 });
 
+$(document).on("click", ".clear", function() {
+    $("#favoriteImages").empty();
+});
+
 
 
 // Calling the renderButtons function to display the intial buttons
