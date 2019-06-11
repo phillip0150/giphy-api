@@ -5,7 +5,7 @@ html{
 body {
     margin: 0 0 0 0;
     background-color: #ade98a9c;
-    font-size: 35px;
+    
     
 }
 
@@ -19,7 +19,12 @@ body {
 
 div{
     padding: 1%;
-    
     width: 100%;
     height: 100%;
+}
+
+#newDiv{
+    margin: auto;
+    width: 60%;
+    padding: 10px;
 }
