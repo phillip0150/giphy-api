@@ -1,11 +1,11 @@
 // Initial array of gif
 var gifs = ["Wow", "Okay", "Whatever", "Meme"];
+
 // Setting a var to see what the Response is, calling for future functions
 var theResponse;
 var theText;
-var theCount = 11;
+var theCount = 10;
 
-// var favorites = [];
 //Hiding an Id
 $("#clickOnImage").hide();
 
@@ -17,8 +17,8 @@ function displayGifInfo() {
     //setting the button text to theText
     //creating a query with the search of what was in the text box
     theText = $(this).text();
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit=11&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
-    
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit="+theCount+"&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
+
     //ajax call to get info
     $.ajax({
     //url is quryURL
@@ -33,7 +33,7 @@ function displayGifInfo() {
         //showing Id
         $("#clickOnImage").show();
         //for each item found, print it;
-        for(var i =0; i < theResponse.data.length-1; i++){
+        for(var i =0; i < theResponse.data.length; i++){
             $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+theResponse.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+theResponse.data[i].rating+"</p><div class=form-check form-check-inline><input class=form-check-input type=checkbox id="+i+" data-response="+theText+" value="+theResponse.data[i].images.fixed_width_still.url+"><label class=form-check-label for=inlineCheckbox"+i+">Add to favorites</label></div></div>");
         }
     });
@@ -78,51 +78,27 @@ $("#add-gif").on("click", function(event) {
 
 });
 
-// This function handles events where one button is clicked
-
-
-  function displayGifInfoAdd10 (event){
+function displayGifInfoAddRemove10 (event){
     //URL query
     event.preventDefault();
-    theCount += 11;
+    
+    //checking the count of images to display
+    //if it <=0, then we hide the div
+    theCount += event.data.theCountData;
     if (theCount > 0) {
         $("#newDiv.row").show();
     }
-    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit="+theCount+"&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
-    console.log(theResponse);
-    //ajax call to get info
-    $.ajax({
-    url: queryURL,
-    method: "GET"
-    }).then(function(response) {
-        $("#newDiv").empty();
-        //setting theResponse to current response
-        //showing Id
-        theResponse = response;
-        $("#clickOnImage").show();
-        //for each item found, print it;
-        for(var i =0; i < response.data.length-1; i++){
-            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+response.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+response.data[i].rating+"</p><div class=form-check form-check-inline><input class=form-check-input type=checkbox id="+i+" data-response="+theText+" value="+response.data[i].images.fixed_width_still.url+"><label class=form-check-label for=inlineCheckbox"+i+">Add to favorites</label></div></div>");
-        }
-    });
-  }
-
-  function displayGifInfoRemove10 (event){
-    //URL query
-    event.preventDefault();
-    theCount += -11;
     if (theCount <=0) {
         $("#newDiv.row").hide();
         
     }
 
-    console.log(theCount);
+    //var for queryURL and new count
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + theText + "&limit="+theCount+"&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
-    console.log(theResponse);
-    //ajax call to get info
+   //ajax call to get info
     $.ajax({
-    url: queryURL,
-    method: "GET"
+        url: queryURL,
+        method: "GET"
     }).then(function(response) {
         $("#newDiv").empty();
         //setting theResponse to current response
@@ -130,46 +106,58 @@ $("#add-gif").on("click", function(event) {
         theResponse = response;
         $("#clickOnImage").show();
         //for each item found, print it;
-        for(var i =0; i < response.data.length-1; i++){
-            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+response.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+response.data[i].rating+"</p><div class=form-check form-check-inline><input class=form-check-input type=checkbox id="+i+" data-response="+theText+"  value="+response.data[i].images.fixed_width_still.url+"><label class=form-check-label for=inlineCheckbox"+i+">Add to favorites</label></div></div>");
+        for(var i =0; i < response.data.length; i++){
+            $("#newDiv").prepend("<div id=newCol class=col-md-auto><img src="+response.data[i].images.fixed_width_still.url+" id="+i+"><p>Rating: "+response.data[i].rating+"</p><div class=form-check form-check-inline><input class=form-check-input type=checkbox id="+i+" data-response="+theText+" value="+response.data[i].images.fixed_width_still.url+"><label class=form-check-label for=inlineCheckbox"+i+">Add to favorites</label></div></div>");
         }
     });
-  }
+}
 
-
-// Generic function for displaying the gif
+// Generic function for displaying the gif, when button is clicked
 $(document).on("click", ".gif", displayGifInfo);
-$(document).on("click", "#10", displayGifInfoAdd10);
-$(document).on("click", "#-10", displayGifInfoRemove10);
+//function for displaying +10 or -10 images
+$(document).on("click", "#10", {theCountData: +10}, displayGifInfoAddRemove10);
+$(document).on("click", "#-10",{theCountData: -10}, displayGifInfoAddRemove10);
+//function to change src of img to moving
 $(document).on("click", "img", function(event) {
     event.preventDefault();
+    //theGif is the target id
     var theGif = event.target.id;
- 
+    //theSrc is the target src
     var theSrc = event.target.src;
+    //setting moving to url with moving image
     var moving = theResponse.data[theGif].images.fixed_width.url;
+    //setting notmoving to still image
     var notMoving = theResponse.data[theGif].images.fixed_width_still.url;
+    //if theSrc is notMoving, then we move it
     if(theSrc === notMoving){
         $("#"+theGif+"").attr('src', moving);
     }
+    //else notMoving
     else {
         $("#"+theGif+"").attr('src', notMoving);
 
     }
     
   });
+//function to add favorites
 $(document).on("click", ".form-check-input", function() {
     console.log(isChecked);
+    //the pictureFavoriteRespone is this attr of data-response (helps me figure out what object it is)
     var pictureFavoriteResponse = $(this).attr("data-response");
+    //seting id to this id
     var id = $(this).attr("id");
+    //setting isCheck to this checked
     var isChecked = $(this).attr("checked");
-    console.log(isChecked);
+    //if isChecked, is checked (meaning we unchecked it to remove it), remove image
     if(isChecked ==="checked"){
         console.log($("#newColFavs"+pictureFavoriteResponse+id));
         $("#newColFavs"+pictureFavoriteResponse+id).remove();
         $(this).removeAttr("checked");
     }
+    //else, we add the image to our favorites
     else {
     $(this).attr("checked", "checked");
+    //make ajax call to get the image and then place it in the favorites
     var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + pictureFavoriteResponse + "&limit="+theCount+"&api_key=9u4JvD0W9vUUNG6PL9RgeTwEsPd5USlV";
     $.ajax({
     url: queryURL,
@@ -179,11 +167,12 @@ $(document).on("click", ".form-check-input", function() {
     
         $("#favoriteImages").append("<div id=newColFavs"+pictureFavoriteResponse+id+" class=col-md-auto><img src="+response.data[id].images.fixed_width_still.url+" id="+id+"></div>");
        
-    });
-}
+        });
+    }
 
 });
 
+//when the clear favorites button is clicked, we clear favorites
 $(document).on("click", ".clear", function() {
     $("#favoriteImages").empty();
 });
